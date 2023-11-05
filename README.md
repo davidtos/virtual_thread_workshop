@@ -23,8 +23,24 @@ Find the sync method and fix it
 ## Assignment 6
 Set the amount of carrier threads
 
-## Assignment 7
-Add the first performance improvement and run add url and for loop to add urls concurrently  
+## Improve performance
+Add the first performance improvement and run add url and for loop to add urls concurrently 
+
+```java
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+
+                executor.submit(() -> visited.add(url));
+                executor.submit(() -> {
+                    for (Element link : linksOnPage) {
+                        String nextUrl = link.attr("abs:href");
+                        if (nextUrl.contains("http")) {
+                            pageQueue.add(nextUrl);
+                        }
+                    }
+                });
+            }
+```
+
 
 ## Use StructuredTaskScope
 introduce structured concurrency and improve it by adding the StructuredTaskScope

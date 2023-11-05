@@ -86,17 +86,12 @@ class Scrape implements Runnable {
             Document document = Jsoup.parse(getBody(url));
             Elements linksOnPage = document.select("a[href]");
 
-            try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-
-                executor.submit(() -> visited.add(url));
-                executor.submit(() -> {
-                    for (Element link : linksOnPage) {
-                        String nextUrl = link.attr("abs:href");
-                        if (nextUrl.contains("http")) {
-                            pageQueue.add(nextUrl);
-                        }
-                    }
-                });
+            visited.add(url);
+            for (Element link : linksOnPage) {
+                String nextUrl = link.attr("abs:href");
+                if (nextUrl.contains("http")) {
+                    pageQueue.add(nextUrl);
+                }
             }
 
         } catch (IOException | InterruptedException e) {
