@@ -26,8 +26,25 @@ Set the amount of carrier threads
 ## Assignment 7
 Add the first performance improvement and run add url and for loop to add urls concurrently  
 
-## Assignment 8
+## Use StructuredTaskScope
 introduce structured concurrency and improve it by adding the StructuredTaskScope
+
+```java
+ try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+                scope.fork(() -> visited.add(url));
+                scope.fork(() -> {
+                            for (Element link : linksOnPage) {
+                                String nextUrl = link.attr("abs:href");
+                                if (nextUrl.contains("http")) {
+                                    pageQueue.add(nextUrl);
+                                }
+                            }
+                            return null;
+                        }
+                );
+            }
+```
+
 
 ## Implement ShutdownOnSuccess
 introduce the ShutdownOnSuccess scope
@@ -49,8 +66,6 @@ private Object post(String serviceUrl, String url) throws IOException, Interrupt
     return null;
 }
 ```
-
-
 
 ## Use scoped values 
 use scoped values for the url lue

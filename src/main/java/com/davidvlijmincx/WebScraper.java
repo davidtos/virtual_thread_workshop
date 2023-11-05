@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.StructuredTaskScope;
 
 public class WebScraper {
 
@@ -87,18 +86,17 @@ class Scrape implements Runnable {
             Document document = Jsoup.parse(getBody(url));
             Elements linksOnPage = document.select("a[href]");
 
-            try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-                scope.fork(() -> visited.add(url));
-                scope.fork(() -> {
-                            for (Element link : linksOnPage) {
-                                String nextUrl = link.attr("abs:href");
-                                if (nextUrl.contains("http")) {
-                                    pageQueue.add(nextUrl);
-                                }
-                            }
-                            return null;
+            try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+
+                executor.submit(() -> visited.add(url));
+                executor.submit(() -> {
+                    for (Element link : linksOnPage) {
+                        String nextUrl = link.attr("abs:href");
+                        if (nextUrl.contains("http")) {
+                            pageQueue.add(nextUrl);
                         }
-                );
+                    }
+                });
             }
 
         } catch (IOException | InterruptedException e) {
