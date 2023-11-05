@@ -12,30 +12,40 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.StructuredTaskScope;
+import java.util.function.Supplier;
 
-public class WebCrawler {
+public class ScopedWebCrawler {
 
-    public static final int PAGES_TO_CRAWL = 200;
+    public static final int PAGES_TO_CRAWL = 100;
 
     public static void main(String[] args) {
         final var queue = new LinkedBlockingQueue<String>(2000);
         Set<String> visited = ConcurrentHashMap.newKeySet(3000);
 
-        queue.add("http://localhost:8080/v1/crawl/delay/330/57");
+        queue.add("http://localhost:8080/v1/crawl/330/57");
 
         long startTime = System.currentTimeMillis();
-
         HttpClient client = createHttpClient();
+
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 //        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
 //        try (var executor = Executors.newFixedThreadPool(1);) {
             for (int i = 0; i < PAGES_TO_CRAWL; i++) {
-                executor.submit(new Spider(queue, visited, client));
+                executor.submit(() -> ScopedValue.runWhere(Scrape.URL,
+                        ()-> {
+                            try {
+                                return queue.take();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        new ScopedSpider(queue, visited, client)));
             }
         }
-
-        System.out.println("just chilling here");
 
         measureTime(startTime, visited);
 
@@ -67,7 +77,9 @@ public class WebCrawler {
     }
 }
 
-class Spider implements Runnable {
+class ScopedSpider implements Runnable {
+
+    final static ScopedValue<Supplier<String>> URL = ScopedValue.newInstance();
 
     private final LinkedBlockingQueue<String> pageQueue;
 
@@ -75,7 +87,7 @@ class Spider implements Runnable {
 
     private final HttpClient client;
 
-    public Spider(LinkedBlockingQueue<String> pageQueue, Set<String> visited, HttpClient client) {
+    public ScopedSpider(LinkedBlockingQueue<String> pageQueue, Set<String> visited, HttpClient client) {
         this.pageQueue = pageQueue;
         this.visited = visited;
         this.client = client;
@@ -85,7 +97,8 @@ class Spider implements Runnable {
     public void run() {
 
         try {
-            String url = pageQueue.take();
+            String url = ScopedSpider.URL.get().get();
+
             Document document = Jsoup.parse(getBody(url));
             Elements linksOnPage = document.select("a[href]");
 
@@ -97,6 +110,21 @@ class Spider implements Runnable {
                     pageQueue.add(nextUrl);
                 }
             }
+
+
+            // doing everything separate;
+//                    try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+//
+//                        executor.submit(() -> visited.add(url));
+//                        executor.submit(() -> {
+//                            for (Element link : linksOnPage) {
+//                                String nextUrl = link.attr("abs:href");
+//                                if (nextUrl.contains("http")) {
+//                                    pageQueue.add(nextUrl);
+//                                }
+//                            }
+//                        });
+//                    }
 
             // do stuff as a group
 //                try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
@@ -114,27 +142,13 @@ class Spider implements Runnable {
 //                    );
 //                }
 
-            // doing everything separate;
-//                    try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-//
-//                        executor.submit(() -> visited.add(url));
-//                        executor.submit(() -> {
-//                            for (Element link : linksOnPage) {
-//                                String nextUrl = link.attr("abs:href");
-//                                if (nextUrl.contains("http")) {
-//                                    pageQueue.add(nextUrl);
-//                                }
-//                            }
-//                        });
-//                    }
 
-
-            // assignment to just store it somewhere but not caring where to store it.
+//             assignment to just store it somewhere but not caring where to store it.
             try (var scope = new StructuredTaskScope.ShutdownOnSuccess<>()) {
 
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/1", url));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/2", url));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/3", url));
+                scope.fork(() ->  post("http://localhost:8080/v1/VisitedService/1"));
+                scope.fork(() ->  post("http://localhost:8080/v1/VisitedService/2"));
+                scope.fork(() ->  post("http://localhost:8080/v1/VisitedService/3"));
 
                 scope.join();
 
@@ -147,13 +161,10 @@ class Spider implements Runnable {
 
     }
 
-    private Object post(String serviceUrl, String url) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            //   System.out.println("e = " + e);
-        }
+    private Object post(String serviceUrl) throws IOException, InterruptedException {
+        String url = Scrape.URL.get().get();
+        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+        client.send(request, HttpResponse.BodyHandlers.ofString());
         return null;
     }
 
