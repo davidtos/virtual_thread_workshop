@@ -17,10 +17,16 @@ add the option to use virtual threads instead
 - Show that VT are not faster than PT
 - Switch to "normal" behaving end-points  that check the performance improvement
 
-## Assignment 5
+## find the pinned virtual thread
 Find the sync method and fix it
 
-## Assignment 6
+```text
+-Djdk.tracePinnedThreads=short
+
+-Djdk.tracePinnedThreads=full
+```
+
+## Set carrier threads (Improve performance branch)
 Set the amount of carrier threads
 
 ## Improve performance

@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d8c0eda-abd8-41e0-ae74-bf7eb2be634a" name="Changes" comment="Starting point of using scoped values">
+    <list default="true" id="6d8c0eda-abd8-41e0-ae74-bf7eb2be634a" name="Changes" comment="find the pinned virtual thread">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/WebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/WebScraper.java" afterDir="false" />
     </list>
@@ -23,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Implement-ShutdownOnSuccess" />
+        <entry key="$PROJECT_DIR$" value="Improve-performance" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,7 +47,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Use-StructuredTaskScope",
+    "git-widget-placeholder": "find-the-pinned-virtual-thread",
     "last_opened_file_path": "/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -108,6 +109,7 @@
     <configuration name="WebScraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.davidvlijmincx.WebScraper" />
       <module name="workshop" />
+      <option name="VM_PARAMETERS" value="-Djdk.tracePinnedThreads=full" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.davidvlijmincx.*" />
@@ -118,6 +120,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.ScopedWebCrawler" />
+      <item itemvalue="Application.WebCrawler" />
+      <item itemvalue="Application.WebScraper" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.WebScraper" />
@@ -137,7 +145,7 @@
       <updated>1699045609415</updated>
       <workItem from="1699045610422" duration="3630000" />
       <workItem from="1699089868952" duration="7257000" />
-      <workItem from="1699181561035" duration="8501000" />
+      <workItem from="1699181561035" duration="9640000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -195,7 +203,23 @@
       <option name="project" value="LOCAL" />
       <updated>1699189062220</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Starting point of StructuredTaskScope">
+      <option name="closed" value="true" />
+      <created>1699191310923</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1699191310923</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Starting point Improve performance">
+      <option name="closed" value="true" />
+      <created>1699191501681</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1699191501681</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,6 +240,9 @@
     <MESSAGE value="init commit" />
     <MESSAGE value="end result of the workshop" />
     <MESSAGE value="Starting point of using scoped values" />
-    <option name="LAST_COMMIT_MESSAGE" value="Starting point of using scoped values" />
+    <MESSAGE value="Starting point of StructuredTaskScope" />
+    <MESSAGE value="Starting point Improve performance" />
+    <MESSAGE value="find the pinned virtual thread" />
+    <option name="LAST_COMMIT_MESSAGE" value="find the pinned virtual thread" />
   </component>
 </project>

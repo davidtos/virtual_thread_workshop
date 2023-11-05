@@ -6,11 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -27,13 +23,12 @@ public class WebScraper {
         queue.add("http://localhost:8080/v1/crawl/330/57");
 
         long startTime = System.currentTimeMillis();
-        HttpClient client = createHttpClient();
 
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 //        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
 //        try (var executor = Executors.newFixedThreadPool(1);) {
             for (int i = 0; i < PAGES_TO_CRAWL; i++) {
-                executor.submit(new Scrape(queue, visited, client));
+                executor.submit(new Scrape(queue, visited));
             }
         }
 
@@ -54,13 +49,6 @@ public class WebScraper {
         System.out.println("Throughput: " + throughput + " pages/sec");
     }
 
-    private static HttpClient createHttpClient() {
-        return HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .connectTimeout(Duration.ofSeconds(20))
-                .build();
-    }
 }
 
 class Scrape implements Runnable {
@@ -69,12 +57,9 @@ class Scrape implements Runnable {
 
     private final Set<String> visited;
 
-    private final HttpClient client;
-
-    public Scrape(LinkedBlockingQueue<String> pageQueue, Set<String> visited, HttpClient client) {
+    public Scrape(LinkedBlockingQueue<String> pageQueue, Set<String> visited) {
         this.pageQueue = pageQueue;
         this.visited = visited;
-        this.client = client;
     }
 
     @Override
@@ -83,7 +68,7 @@ class Scrape implements Runnable {
         try {
             String url = pageQueue.take();
 
-            Document document = Jsoup.parse(getBody(url));
+            Document document = Jsoup.connect(url).get();
             Elements linksOnPage = document.select("a[href]");
 
             visited.add(url);
@@ -100,9 +85,4 @@ class Scrape implements Runnable {
 
     }
 
-    private String getBody(String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
-    }
 }
