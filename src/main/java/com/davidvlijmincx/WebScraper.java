@@ -101,26 +101,10 @@ class Scrape implements Runnable {
                 );
             }
 
-            try (var scope = new StructuredTaskScope.ShutdownOnSuccess<>()) {
-
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/1", url));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/2", url));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/3", url));
-
-                scope.join();
-
-            }
-
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-    }
-
-    private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-        return null;
     }
 
     private String getBody(String url) throws IOException, InterruptedException {

@@ -29,8 +29,27 @@ Add the first performance improvement and run add url and for loop to add urls c
 ## Assignment 8
 introduce structured concurrency and improve it by adding the StructuredTaskScope
 
-## Assignment 9
+## Implement ShutdownOnSuccess
 introduce the ShutdownOnSuccess scope
+
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnSuccess<>()) {
+
+    scope.fork(() -> post("http://localhost:8080/v1/VisitedService/1", url));
+    scope.fork(() -> post("http://localhost:8080/v1/VisitedService/2", url));
+    scope.fork(() -> post("http://localhost:8080/v1/VisitedService/3", url));
+
+    scope.join();
+
+}
+
+private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
+    HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+    client.send(request, HttpResponse.BodyHandlers.ofString());
+    return null;
+}
+```
+
 
 
 ## Use scoped values 
