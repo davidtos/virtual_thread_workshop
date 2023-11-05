@@ -6,7 +6,7 @@ check out code
 ## assigment 2
 make it work with platform threads
 
-## assigment 3
+## Start using virtual threads
 add the option to use virtual threads instead
 
 - show that it doesn't make a difference in performance (you need to measure it, to improve it)

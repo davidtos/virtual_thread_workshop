@@ -24,8 +24,7 @@ public class WebScraper {
 
         long startTime = System.currentTimeMillis();
 
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-//        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
+        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
 //        try (var executor = Executors.newFixedThreadPool(1);) {
             for (int i = 0; i < PAGES_TO_CRAWL; i++) {
                 executor.submit(new Scrape(queue, visited));
