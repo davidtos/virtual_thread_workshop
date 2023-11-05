@@ -9,12 +9,9 @@ import java.io.IOException;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class WebScraper {
-
-    public static final int PAGES_TO_CRAWL = 100;
 
     public static void main(String[] args) {
         final var queue = new LinkedBlockingQueue<String>(2000);
@@ -24,12 +21,7 @@ public class WebScraper {
 
         long startTime = System.currentTimeMillis();
 
-        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
-//        try (var executor = Executors.newFixedThreadPool(1);) {
-            for (int i = 0; i < PAGES_TO_CRAWL; i++) {
-                executor.submit(new Scrape(queue, visited));
-            }
-        }
+        new Scrape(queue, visited).scrape();
 
         measureTime(startTime, visited);
 
@@ -50,7 +42,7 @@ public class WebScraper {
 
 }
 
-class Scrape implements Runnable {
+class Scrape {
 
     private final LinkedBlockingQueue<String> pageQueue;
 
@@ -61,8 +53,7 @@ class Scrape implements Runnable {
         this.visited = visited;
     }
 
-    @Override
-    public void run() {
+    public void scrape() {
 
         try {
             String url = pageQueue.take();

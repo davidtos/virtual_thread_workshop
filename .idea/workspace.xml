@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d8c0eda-abd8-41e0-ae74-bf7eb2be634a" name="Changes" comment="find the pinned virtual thread">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/WebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/WebScraper.java" afterDir="false" />
     </list>
@@ -24,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Improve-performance" />
+        <entry key="$PROJECT_DIR$" value="Difference-between-virtual-and-platform-threads" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -47,7 +46,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "find-the-pinned-virtual-thread",
+    "git-widget-placeholder": "Start-using-virtual-threads",
     "last_opened_file_path": "/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -144,7 +143,7 @@
       <updated>1699045609415</updated>
       <workItem from="1699045610422" duration="3630000" />
       <workItem from="1699089868952" duration="7257000" />
-      <workItem from="1699181561035" duration="9640000" />
+      <workItem from="1699181561035" duration="10148000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -218,7 +217,23 @@
       <option name="project" value="LOCAL" />
       <updated>1699191501681</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="find the pinned virtual thread">
+      <option name="closed" value="true" />
+      <created>1699192410503</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1699192410503</updated>
+    </task>
+    <task id="LOCAL-00011" summary="find the pinned virtual thread">
+      <option name="closed" value="true" />
+      <created>1699192732555</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1699192732555</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

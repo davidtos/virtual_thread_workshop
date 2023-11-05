@@ -3,7 +3,7 @@
 ## assigment 1
 check out code
 
-## assigment 2
+## add platform threads
 make it work with platform threads
 
 ## Start using virtual threads
