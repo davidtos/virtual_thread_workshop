@@ -12,7 +12,7 @@ add the option to use virtual threads instead
 - show that it doesn't make a difference in performance (you need to measure it, to improve it)
 - tell about the VT and their carrier threads
 
-## assigment 4
+## Difference between virtual and platform threads
 - Let them use a webserver that returns without delay
 - Show that VT are not faster than PT
 - Switch to "normal" behaving end-points  that check the performance improvement

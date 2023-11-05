@@ -20,7 +20,7 @@ public class WebScraper {
         final var queue = new LinkedBlockingQueue<String>(2000);
         Set<String> visited = ConcurrentHashMap.newKeySet(3000);
 
-        queue.add("http://localhost:8080/v1/crawl/330/57");
+        queue.add("http://localhost:8080/v1/crawl/delay/330/57");
 
         long startTime = System.currentTimeMillis();
 

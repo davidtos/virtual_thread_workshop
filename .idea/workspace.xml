@@ -109,7 +109,6 @@
     <configuration name="WebScraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.davidvlijmincx.WebScraper" />
       <module name="workshop" />
-      <option name="VM_PARAMETERS" value="-Djdk.tracePinnedThreads=full" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.davidvlijmincx.*" />
