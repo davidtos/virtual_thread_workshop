@@ -61,44 +61,77 @@ the same thing, but now it should use Virtual Threads instead.
 - tell about the VT and their carrier threads
 
 ## (Step 4) - Difference between virtual and platform threads
-The scraper is now able to run on either Virtual Threads or on Platform threads. To see the
+The scraper is now able to run on either Virtual Threads or on Platform threads. To see the impact these Thread have on the Scraper
+you can play with the following two variables:
 
+1. The URL of the scraper
+2. The number of threads you create.
 
+The URLs you can use are:
+- http://localhost:8080/v1/crawl/delay/330/57
+- http://localhost:8080/v1/crawl/330/57
 
+The first end point has a delay between 10 and 200 milliseconds, forcing the threads to block and wait for a number of seconds. 
+The other URL without the delay returns immediately without waiting, using this URL the thread doesn't have to wait that long.
+
+The second thing you can change is the number of the scrape jobs you start. Try out what differance it makes when you submit 
+200 or 400 scrape task to a pool of platform threads or create as many virtual threads you have jobs.
+
+The results may surprise you :-)
+
+**Hint**: Try out lots of task with the delay endpoint.
+
+# REMOVE
 - Let them use a webserver that returns without delay
 - Show that VT are not faster than PT
 - Switch to "normal" behaving end-points  that check the performance improvement
 
 ## (Step 5) - find the pinned virtual thread
-Find the sync method and fix it
+Virtual are unmounted are when they are blocked and waiting for a result to come return. This doesn't always happen though...
+It's up to you to fix the scraper and replace the functionality that causes virtual threads to be pinned.
 
+To help you find the method causing issues you can use the following VM options:
 ```text
 -Djdk.tracePinnedThreads=short
 
 -Djdk.tracePinnedThreads=full
 ```
+Run the web scraper with one of these two options and replace the functionality with one that does not cause the virtual threads
+to be pinned.
+
+**Hint**: Java 9 added a http client that does not block
 
 ## (Step 6) - Set carrier threads (Improve performance branch)
-Set the amount of carrier threads
+By default, you get as many carrier thread as there are cores available inside you system. There are two ways to tweak the 
+number of carrier threads that get created. 
 
-## (Step 7) - Improve performance
-Add the first performance improvement and run add url and for loop to add urls concurrently 
+Use the following options and see what impact it has on your scraper.
+```text
+jdk.virtualThreadScheduler.parallelism=5
 
-```java
-try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-
-                executor.submit(() -> visited.add(url));
-                executor.submit(() -> {
-                    for (Element link : linksOnPage) {
-                        String nextUrl = link.attr("abs:href");
-                        if (nextUrl.contains("http")) {
-                            pageQueue.add(nextUrl);
-                        }
-                    }
-                });
-            }
+jdk.virtualThreadScheduler.maxPoolSize=10
 ```
 
+You can remove these options when you continue to the next step.
+
+## (Step 7) - Improve performance
+The next step is to improve the performance of the scraper. Make it so that the following operations run in their own virtual thread.
+
+```java
+visited.add(url);
+for (Element link : linksOnPage) {
+    String nextUrl = link.attr("abs:href");
+    if (nextUrl.contains("http")) {
+        pageQueue.add(nextUrl);
+    }
+}
+```
+Run the Scraper a few times with and without the improvement to see the differance it makes.
+
+**Note**: Not seeing a lot of differance or lower performance? Those things happen sadly, and depend on lot different factors. 
+One big thing that has a lot of impact on the performance is the Spring boot project you started in the beginning. You can
+make changes to the TestForWorkshopController.java class to make the server behave differently. One big thing that impact this
+part of the code is the number of URls on a page.
 
 ## (Step 8) - Use StructuredTaskScope
 introduce structured concurrency and improve it by adding the StructuredTaskScope
