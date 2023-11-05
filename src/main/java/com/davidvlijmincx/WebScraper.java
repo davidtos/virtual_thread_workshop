@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.StructuredTaskScope;
-import java.util.function.Supplier;
 
 public class WebScraper {
 
@@ -35,15 +34,7 @@ public class WebScraper {
 //        try (var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
 //        try (var executor = Executors.newFixedThreadPool(1);) {
             for (int i = 0; i < PAGES_TO_CRAWL; i++) {
-                executor.submit(() -> ScopedValue.runWhere(Scrape.URL,
-                        () -> {
-                            try {
-                                return queue.take();
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        },
-                        new Scrape(queue, visited, client)));
+                executor.submit(new Scrape(queue, visited, client));
             }
         }
 
@@ -75,8 +66,6 @@ public class WebScraper {
 
 class Scrape implements Runnable {
 
-    final static ScopedValue<Supplier<String>> URL = ScopedValue.newInstance();
-
     private final LinkedBlockingQueue<String> pageQueue;
 
     private final Set<String> visited;
@@ -93,7 +82,7 @@ class Scrape implements Runnable {
     public void run() {
 
         try {
-            String url = Scrape.URL.get().get();
+            String url = pageQueue.take();
 
             Document document = Jsoup.parse(getBody(url));
             Elements linksOnPage = document.select("a[href]");
@@ -114,9 +103,9 @@ class Scrape implements Runnable {
 
             try (var scope = new StructuredTaskScope.ShutdownOnSuccess<>()) {
 
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/1"));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/2"));
-                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/3"));
+                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/1", url));
+                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/2", url));
+                scope.fork(() -> post("http://localhost:8080/v1/VisitedService/3", url));
 
                 scope.join();
 
@@ -128,8 +117,7 @@ class Scrape implements Runnable {
 
     }
 
-    private Object post(String serviceUrl) throws IOException, InterruptedException {
-        String url = Scrape.URL.get().get();
+    private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
         client.send(request, HttpResponse.BodyHandlers.ofString());
         return null;

@@ -33,8 +33,25 @@ introduce structured concurrency and improve it by adding the StructuredTaskScop
 introduce the ShutdownOnSuccess scope
 
 
-## add scoped values 
-use scoped values for the url 
+## Use scoped values 
+use scoped values for the url lue
+
+```java
+    final static ScopedValue<Supplier<String>> URL = ScopedValue.newInstance();
+
+        Scrape.URL.get();
+
+executor.submit(() -> ScopedValue.runWhere(Scrape.URL,
+        () -> {
+            try {
+                return queue.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        },
+        new Scrape(queue, visited, client)));
+```
+
 - show the performance impact
 - show the inheritance when using structured task scope
 
