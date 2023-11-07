@@ -183,29 +183,13 @@ private Object post(String serviceUrl, String url) throws IOException, Interrupt
 
 ## (Step 10) - Use scoped values
 The name of this step already gave it away, but for the last step you are going to add scoped values to the scraper.
-You need to change the Scraper in such a way that each scraper instance run within a scope where the URL.
+You need to change the Scraper in such a way that each scraper instance run in a scope where the http client is already known.
 
-The idea is that the `.take()` from the **queue** 
+The idea is that you no longer need to pass the HttpClient as a constructor parameter to the scraper but that you use ScopedValue
+to have the client known within the Thread.
 
+Note: See what happens to the child virtual threads that also use the client.
 
-
-```java
-    final static ScopedValue<Supplier<String>> URL = ScopedValue.newInstance();
-
-        Scrape.URL.get();
-
-        executor.submit(() -> ScopedValue.runWhere(Scrape.URL,
-        () -> {
-        try {
-        return queue.take();
-        } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-        }
-        },
-        new Scrape(queue, visited, client)));
-```
-
-- show the performance impact
 - show the inheritance when using structured task scope
 
 
