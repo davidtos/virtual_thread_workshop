@@ -40,26 +40,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "add-platform-threads",
-    "last_opened_file_path": "/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;add-platform-threads&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/com/davidvlijmincx" />
@@ -127,9 +127,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.WebScraper" />
-        <item itemvalue="Application.ScopedWebCrawler" />
         <item itemvalue="Application.WebCrawler" />
+        <item itemvalue="Application.ScopedWebCrawler" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.WebScraper" />
       </list>
     </recent_temporary>
   </component>
@@ -144,6 +145,7 @@
       <workItem from="1699045610422" duration="3630000" />
       <workItem from="1699089868952" duration="7257000" />
       <workItem from="1699181561035" duration="19637000" />
+      <workItem from="1699374147615" duration="4368000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
