@@ -6,10 +6,10 @@ Welcome by the workshop where you are going to build a web scraper that is going
 - Structured task scope
 - Scoped values
 
-The workshop start with just a simple single threaded web scraper that only scrapes a single page. You are to improve
-this web scraper by first making it multithreaded followed by using virtual threads. These new kind of threads are a great
+The workshop start with just a simple single threaded web scraper that only scrapes a single page. You are going to improve
+this web scraper by first making it multithreading followed by using virtual threads. These new kind of threads are a great
 new addition to the Java languages but don't work the same as the old threads in every situation. During this workshop you
-are going to experience when virtual threads work best, and when they work just oke.
+are going to experience when virtual threads work best, and when they work just oke-ish.
 
 To follow along with the workshop you need to also check out [this repository](https://github.com/davidtos/workshop_server).
 The repo contains a Spring application that is going to act as the server where the scraper is going to be talking to.
@@ -20,12 +20,19 @@ inside this branch. If you want to start every step of the workshop with a clean
 that step. Each step has a branch inside this git repo with the same name. If you are falling behind please say so, then we
 can adjust the speed of the workshop :-) or you can also check at the branch of the next step.
 
+## Requirements 
+To following along with this workshop you need the following things:
+
+- Java 21
+- Check out and run the project in [this repository](https://github.com/davidtos/workshop_server).
+- Check out this repository if you haven't done so already
+
 # TL;DR
 - Let's build a web scraper!
 - Run the Spring project inside [this repository](https://github.com/davidtos/workshop_server), it has the web server we scrape inside it
 - Follow along with the steps below (Ron and David give some theory, hints and background info between steps)
-- Already done and want to start the next step? go head! :-)
-- Any questions? Feel free to ask!
+- Already done and want to start with the next step? go head! :-)
+- Any questions? Feel free to ask! We are happy to answer them
 
 # The steps of the workshop:
 Just follow along with the following steps. If you have any questions feel free to ask Ron and I are there to answer them.
@@ -41,24 +48,30 @@ This is the repository you are looking at. It contains all the steps/branches th
 This is the webserver that the scraper is going to scape. You can run the Spring project and let it run in the background.
 You don't have to make any changes inside this project.
 
-To check if everything works you can try and run the WebScraper class; It should scrape a single page.
+To check if everything works you can try and run the WebScraper class; It should scrape a single page. You are going to improve the
+speed with Virtual threads; We Promise!
 
 ## (Step 2) - add platform threads
 If you didn't do it already check out the following branch "add platform threads" this is the basis of the web scraper.
 you can already run it, and it will scrape a single page from the web server.
 
-The first step is to make the **Scrape** run in concurrently using platform threads. The goal is to be able to create any number of
-Scrape instances that each can scrape a single page.
+The first step is to make the **Scrape** class run concurrently using platform threads. The goal is to be able to create any number of
+Scrape instances that each can scrape a single page. 
+
+<details>
+<summary>Hint</summary>
+One way to achieve this is by using the Executors services. 
+</details>
 
 ## (Step 3) - Start using virtual threads
 You can now scrape webpages using multiple Scrape instances that each run on a Platform thread. The next step is to implement
-the same thing, but with use Virtual Threads instead.
+the same thing, but with Virtual Threads instead of Platform threads.
 
-<details>
-<summary>Note</summary>
-Make it easy to switch between Virtual and Platform threads, so you can switch between the two to see the difference in performance.
-Doesn't need to any be fancy commenting out a line of code is fine.
-</details>
+Take a good look at how this affect the performance of the scraper.
+
+> Make it easy to switch between Virtual and Platform threads, so you can switch between the two to see the difference in performance.
+> Doesn't need to any be fancy commenting out a line of code is fine.
+
 
 # REMOVE
 - show that it doesn't make a difference in performance (you need to measure it, to improve it)
@@ -185,12 +198,11 @@ private Object post(String serviceUrl, String url) throws IOException, Interrupt
 The name of this step already gave it away, but for the last step you are going to add scoped values to the scraper.
 You need to change the Scraper in such a way that each scraper instance run in a scope where the http client is already known.
 
-The idea is that you no longer need to pass the HttpClient as a constructor parameter to the scraper but that you use ScopedValue
-to have the client known within the Thread.
+The goal is to no longer pass the HttpClient as a constructor parameter to the Scraper but that you implement it as a ScopedValue. This way the Client
+is known inside the scraper and all the subsequent calls.
 
-Note: See what happens to the child virtual threads that also use the client.
-
-- show the inheritance when using structured task scope
-
+> Note: During the implementation notice that the child virtual threads can use the same client as you passed to the parent thread.
+> When you use the structured task scope all the threads you fork will have the same scoped values as the parent becasue they
+> run in the same scope as the parent.
 
 
