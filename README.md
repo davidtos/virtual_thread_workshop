@@ -19,39 +19,37 @@ Below you will find the steps of the workshop. The best way to follow along is t
 - Let's build a web scraper!
 - Run the Spring project inside [this repository](https://github.com/davidtos/workshop_server), it has the web server we scrape inside it
 - Follow along with the steps below (Ron and David give some theory, hints, and background info between steps)
-- Already done and want to start with the next step? go head! :-)
+- Are you already done and want to start with the next step? go head! :-)
 - Any questions? Feel free to ask! We are happy to answer them
 
 # Requirements
 To follow along with this workshop you need the following things:
 
 - Java 21
-- Check out and run the project in [this repository](https://github.com/davidtos/workshop_server).
+- Check out and run the project in [this repository](https://github.com/davidtos/workshop_server)
 - Check out this repository if you haven't done so already
 
 # The steps of the workshop:
 Just follow along with the following steps. If you have any questions feel free to ask Ron and I are there to answer them.
-We will you give some needed information between steps, so you can focus on solving one problem at a time. :-)
+We will you give some needed information between steps, so you can focus on solving one type of problem at a time. :-)
 
 ## (Step 1) - check out the code
 You need to check out these two repositories:
 
 ### The scraper basis https://github.com/davidtos/virtual_thread_workshop
-This is the repository you are looking at. It contains all the steps/branches that you will need to build the scraper.
+This is the repository you are looking at right now. It contains all the steps/branches and starting information that you will need to build the scraper.
 
 ### The web server https://github.com/davidtos/workshop_server.
-This is the webserver that the scraper is going to scape. You can run the Spring project and let it run in the background.
-You don't have to make any changes inside this project.
+This is the webserver that the scraper is going to scrape. The repository contains a Spring boot application that you can run in the background while you build the Scraper. You don't have to make any changes to this project.
 
-To check if everything works you can try and run the WebScraper class; It should scrape a single page. You are going to improve the
-speed with Virtual threads; We Promise!
+When you have both projects checked out and the Spring boot application running you can verify if everything works as it should. To check that everything works you can run the WebScraper class from this repository; it should scrape a single page.
 
-## (Step 2) - add platform threads
-If you didn't do it already check out the following branch "add platform threads" this is the basis of the web scraper.
-you can already run it, and it will scrape a single page from the web server.
+## (Step 2) - Add platform threads
+Check out the following branch "add platform threads" if you haven't done so already. This branch is the basis of the web scraper.
+you can already run it, and it will scrape a single page from the web server/ Spring boot application.
 
 The first step is to make the **Scrape** class run concurrently using platform threads. The goal is to be able to create any number of
-Scrape instances that each can scrape a single page.
+Scrape instances that each scrape a single page.
 
 <details>
 <summary>Hint</summary>
@@ -59,71 +57,61 @@ One way to achieve this is by using the Executors services.
 </details>
 
 ## (Step 3) - Start using virtual threads
-You can now scrape webpages using multiple Scrape instances that each run on a Platform thread. The next step is to implement
-the same thing, but with Virtual Threads instead of Platform threads.
+You can now scrape webpages using multiple Scrape instances that each run on a Platform Thread. The next step is to change it in such a way that it uses Virtual threads instead.  To do this you can use the Thread class or an Executor.
 
-Take a good look at how this affect the performance of the scraper.
+Before you make the change take a good look at the performance so you can make a fair comparison between Virtual threads and Platform threads.
 
 > Make it easy to switch between Virtual and Platform threads, so you can switch between the two to see the difference in performance.
-> Doesn't need to any be fancy commenting out a line of code is fine.
-
-
-# REMOVE
-- show that it doesn't make a difference in performance (you need to measure it, to improve it)
-- tell about the VT and their carrier threads
+> Doesn't need to be anything fancy commenting out a line of code is fine.
 
 ## (Step 4) - Difference between virtual and platform threads
-The scraper is now able to run on either Virtual Threads or on Platform threads. To see the impact these Thread have on the Scraper
+The scraper is now able to run on either Virtual Threads or Platform threads. To see the impact these Threads have on the Scraper
 you can play with the following two variables:
 
 1. The URL of the scraper
-2. The number of threads you create.
+2. The number of threads/tasks you create.
 
 The URLs you can use are:
 - http://localhost:8080/v1/crawl/delay/330/57
 - http://localhost:8080/v1/crawl/330/57
 
-The first end point has a delay between 10 and 200 milliseconds, forcing the threads to block and wait for a number of milliseconds.
-The other URL without the delay returns immediately without waiting; with this URL the thread doesn't have to wait a long time to get a response.
+The first endpoint has a delay between 10 and 200 milliseconds, forcing the threads to block and wait for several milliseconds.
+The URL without the delay returns immediately without the extra waiting;
+meaning that the responses from this endpoint are very quick and the thread is not blocked for very long.
 
-The second thing you can change is the number of the scrape jobs you start. Try out what differance it makes when you submit
-200 or 400 or even a 1000 scrape task to a pool of platform threads or create as many virtual threads as you have jobs.
+The second thing you can change is the number of scrape tasks you start. Try out the difference it makes when you submit
+200 or 400 or even a 1000+ scrape task to a pool of platform threads or in the case of virtual threads create as many virtual threads as you have jobs.
 
-The results may surprise you :-)
+Some of the results will surprise you :-)
 
 <details>
 <summary>Note</summary>
-Try out lots of task with the delay endpoint.
+To get a good idea of the impact. I recommend trying out lots of tasks with the delay endpoint on both virtual and platform threads. And the same thing but without the endpoint with the delay.
 </details>
 
+## (Step 5) - Find the pinned virtual thread
+Virtual threads are unmounted when they are blocked for example, when they are waiting on the response of a web server. Unmounting is a powerful feature but doesn't always work (yet)...
+When the unmounting doesn't happen we say that the virtual is pinned.
+A pinned virtual thread causes not only the virtual thread but also the carrier thread it's running on to be blocked. As you may expect this causes performance issues.
 
-# REMOVE
-- Let them use a webserver that returns without delay
-- Show that VT are not faster than PT
-- Switch to "normal" behaving end-points  that check the performance improvement
+Now it's up to you to fix the scraper and replace the functionality that causes virtual threads to be pinned.
 
-## (Step 5) - find the pinned virtual thread
-Virtual threads are unmounted when they are blocked like for example, when they are waiting on the response of a web server. Unmouting a nice feature but doesn't (yet) always work...
-When the unmouting doesn't happen we say that the virtual is pinnend. The result is that the Virtual thread and Carrier thread its running on are blocked.
-
-It's up to you to fix the scraper and replace the functionality that causes virtual threads to be pinned.
-
-To help you find the method causing issues you can use one the following VM options:
+To help you find the method causing issues you can use one of the following VM options:
 ```text
 -Djdk.tracePinnedThreads=short
 
 -Djdk.tracePinnedThreads=full
 ```
-Run the web scraper with one of these two options and replace the functionality with one that does not cause the virtual thrads
+Run the web scraper with one of these two options and replace the functionality with one that does not cause the virtual threads
 to be pinned. Try them both out and see what the difference is between the both of them and which one helps you the most to fix the issue.
 
 <details>
 <summary>Hint</summary>
-Java 9 added a http client that does not block
+Java 9 added an HTTP client that does not block
 </details>
 
 ## (Step 6) - Set carrier threads (Improve performance branch)
-By default, you get as many carrier thread as there are cores available inside you system. There are two ways to tweak the
+By default, you get as many carrier threads as there are cores available inside your system. There are two ways to tweak the
 number of carrier threads that get created.
 
 Use the following options and see what impact it has on your scraper.
@@ -133,9 +121,9 @@ jdk.virtualThreadScheduler.parallelism=5
 jdk.virtualThreadScheduler.maxPoolSize=10
 ```
 
-Try out some diffenent numbers and see if it increases or lowers the amount of pages per second you are able to scrape.
+Try out some different numbers and see if it increases or lowers the amount of pages per second you can scrape.
 
-> You can remove these options when you continue to the next step.
+> These options are not needed for the following steps.
 
 ## (Step 7) - Improve performance
 The next step is to improve the performance of the scraper. Make it so that the following operations run in their own virtual thread.
@@ -149,26 +137,25 @@ visited.add(url);
         }
         }
 ```
-Run the Scraper a few times with and without the improvement to see the differance it makes if any.
+Run the Scraper a few times with and without the improvement to see the difference in performance it makes.
 
 ## (Step 8) - Use StructuredTaskScope
-> For this and the following steps it is maybe necessary to run your application with the `--enable-preview` flag.
+> For this and the following steps it may maybe necessary to run your application with the `--enable-preview` flag.
 
-During the last step you started two virtual threads inside another virtual thread. This is a great way to run things concurrently, but its creates an implicit relationship
-between the threads. What should happen when a thread fails? In this case it all or nothing, either all threads succeed or none do.
+During the previous step, you started two virtual threads inside another virtual thread. This is a great way to run things concurrently, but it creates an implicit relationship between the threads. What should happen when a thread fails? The desired behavior in this case would be all or nothing, either all threads succeed or we do a rollback.
 
-During this step we are going to improve the code to make the relationship between the threads more explicit. This help other
-developers to better understand the intent of your code, and you can use a powerful way of managing the lifetime of threads.
+During this step, we are going to improve the code to make the relationship these threads have more explicit. This help other
+developers to better understand the intent of your code, and enables you to use a powerful way of managing the lifetime of threads.
 
 For this step rewrite the code from the previous assignment in a way that it uses `StructuredTaskScope.ShutdownOnFailure()` the idea is
-to fork a new thread using the StructuredTaskScope.
+to fork new threads using the StructuredTaskScope.
 
 ## (Step 9) - Implement ShutdownOnSuccess
-`ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step you are going to implement the
-`ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** states that it will shut down the scope after a threads finishes successful.
+`ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step, you are going to implement the
+`ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** states that it will shut down the scope after a threads finishes successfully.
 
-For the next step we are going to let another service know what page we just scrolled. To improve the speed of the scraper it doesn't matter
-which instance processes the request first. The fastest instance is the winner as far as the scraper is concerned.
+For the next step, we are going to let another service know what page we just scraped. To improve the speed of the scraper it doesn't matter
+which instance processes the request first. The fastest instance to process the request is the winner as far as the scraper is concerned.
 
 The URLs of the instances is:
 - http://localhost:8080/v1/VisitedService/1
@@ -199,5 +186,3 @@ is known inside the scraper and all the subsequent calls.
 > Note: During the implementation notice that the child virtual threads can use the same client as you passed to the parent thread.
 > When you use the structured task scope all the threads you fork will have the same scoped values as the parent becasue they
 > run in the same scope as the parent.
-
-
