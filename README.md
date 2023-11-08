@@ -1,38 +1,33 @@
 # Web Scraper Workshop
-Welcome by the workshop where you are going to build a web scraper that is going to use:
+Welcome to the workshop where you are going to build a web scraper that is going to use:
 
 - Platform threads
 - Virtual threads
 - Structured task scope
 - Scoped values
 
-The workshop start with just a simple single threaded web scraper that only scrapes a single page. You are going to improve
-this web scraper by first making it multithreading followed by using virtual threads. These new kind of threads are a great
-new addition to the Java languages but don't work the same as the old threads in every situation. During this workshop you
-are going to experience when virtual threads work best, and when they work just oke-ish.
+The workshop starts with just a simple single-threaded web scraper that only scrapes a single page. You are going to improve this web scraper by first making it multithreaded using platform threads and later by using virtual threads. This new type of thread is a great
+new addition to the Java language but doesn't work the same as platform threads in every situation. During this workshop you are going to experience when virtual threads work best, and when they work just oke-ish.
 
 To follow along with the workshop you need to also check out [this repository](https://github.com/davidtos/workshop_server).
-The repo contains a Spring application that is going to act as the server where the scraper is going to be talking to.
+The repo contains a Spring application that is going to act as the web server that you are going to scrape.
 
 ## How to follow along with the workshop
-Below you will find the steps of the workshop. The best way to following along is to start with step 1 and building
-inside this branch. If you want to start every step of the workshop with a clean branch you can also check out the branch belonging to
-that step. Each step has a branch inside this git repo with the same name. If you are falling behind please say so, then we
-can adjust the speed of the workshop :-) or you can also check at the branch of the next step.
-
-## Requirements 
-To following along with this workshop you need the following things:
-
-- Java 21
-- Check out and run the project in [this repository](https://github.com/davidtos/workshop_server).
-- Check out this repository if you haven't done so already
+Below you will find the steps of the workshop. The best way to follow along is to start with step 1 and to keep developing inside this branch. If you want to start every step of the workshop with a clean branch you can also check out the branch belonging to that step. Each step has a branch inside this git repo with the same name. If you are falling behind please say so, then we can adjust the speed of the workshop :-) or you can check out at the branch of the next step.
 
 # TL;DR
 - Let's build a web scraper!
 - Run the Spring project inside [this repository](https://github.com/davidtos/workshop_server), it has the web server we scrape inside it
-- Follow along with the steps below (Ron and David give some theory, hints and background info between steps)
+- Follow along with the steps below (Ron and David give some theory, hints, and background info between steps)
 - Already done and want to start with the next step? go head! :-)
 - Any questions? Feel free to ask! We are happy to answer them
+
+# Requirements
+To follow along with this workshop you need the following things:
+
+- Java 21
+- Check out and run the project in [this repository](https://github.com/davidtos/workshop_server).
+- Check out this repository if you haven't done so already
 
 # The steps of the workshop:
 Just follow along with the following steps. If you have any questions feel free to ask Ron and I are there to answer them.
@@ -56,7 +51,7 @@ If you didn't do it already check out the following branch "add platform threads
 you can already run it, and it will scrape a single page from the web server.
 
 The first step is to make the **Scrape** class run concurrently using platform threads. The goal is to be able to create any number of
-Scrape instances that each can scrape a single page. 
+Scrape instances that each can scrape a single page.
 
 <details>
 <summary>Hint</summary>
@@ -129,7 +124,7 @@ Java 9 added a http client that does not block
 
 ## (Step 6) - Set carrier threads (Improve performance branch)
 By default, you get as many carrier thread as there are cores available inside you system. There are two ways to tweak the
-number of carrier threads that get created. 
+number of carrier threads that get created.
 
 Use the following options and see what impact it has on your scraper.
 ```text
@@ -147,29 +142,29 @@ The next step is to improve the performance of the scraper. Make it so that the 
 
 ```java
 visited.add(url);
-    for (Element link : linksOnPage) {
-    String nextUrl = link.attr("abs:href");
-    if (nextUrl.contains("http")) {
+        for (Element link : linksOnPage) {
+        String nextUrl = link.attr("abs:href");
+        if (nextUrl.contains("http")) {
         pageQueue.add(nextUrl);
-    }
-}
+        }
+        }
 ```
-Run the Scraper a few times with and without the improvement to see the differance it makes if any. 
+Run the Scraper a few times with and without the improvement to see the differance it makes if any.
 
 ## (Step 8) - Use StructuredTaskScope
-> For this and the following steps it is maybe necessary to run your application with the `--enable-preview` flag. 
+> For this and the following steps it is maybe necessary to run your application with the `--enable-preview` flag.
 
 During the last step you started two virtual threads inside another virtual thread. This is a great way to run things concurrently, but its creates an implicit relationship
-between the threads. What should happen when a thread fails? In this case it all or nothing, either all threads succeed or none do. 
+between the threads. What should happen when a thread fails? In this case it all or nothing, either all threads succeed or none do.
 
 During this step we are going to improve the code to make the relationship between the threads more explicit. This help other
 developers to better understand the intent of your code, and you can use a powerful way of managing the lifetime of threads.
 
-For this step rewrite the code from the previous assignment in a way that it uses `StructuredTaskScope.ShutdownOnFailure()` the idea is 
+For this step rewrite the code from the previous assignment in a way that it uses `StructuredTaskScope.ShutdownOnFailure()` the idea is
 to fork a new thread using the StructuredTaskScope.
 
 ## (Step 9) - Implement ShutdownOnSuccess
-`ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step you are going to implement the 
+`ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step you are going to implement the
 `ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** states that it will shut down the scope after a threads finishes successful.
 
 For the next step we are going to let another service know what page we just scrolled. To improve the speed of the scraper it doesn't matter
@@ -188,10 +183,10 @@ Now it is up to you to implement the ShutdownOnSuccess scope in a way that a new
 If you are using the HttpClient you can use the following code:
 ```java
 private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
-    HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-    client.send(request, HttpResponse.BodyHandlers.ofString());
-    return null;
-}
+        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+        return null;
+        }
 ```
 
 ## (Step 10) - Use scoped values
