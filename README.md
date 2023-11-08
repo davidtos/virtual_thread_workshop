@@ -84,10 +84,8 @@ The second thing you can change is the number of scrape tasks you start. Try out
 
 Some of the results will surprise you :-)
 
-<details>
-<summary>Note</summary>
-To get a good idea of the impact. I recommend trying out lots of tasks with the delay endpoint on both virtual and platform threads. And the same thing but without the endpoint with the delay.
-</details>
+> Note: To get a good idea of the impact. I recommend trying out lots of tasks with the delay endpoint on both virtual and platform threads. And the same thing but without the endpoint with the delay.
+
 
 ## (Step 5) - Find the pinned virtual thread
 Virtual threads are unmounted when they are blocked for example, when they are waiting on the response of a web server. Unmounting is a powerful feature but doesn't always work (yet)...
