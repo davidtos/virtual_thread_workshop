@@ -99,6 +99,7 @@ class Scrape implements Runnable {
                             return null;
                         }
                 );
+                scope.join();
             }
 
             try (var scope = new StructuredTaskScope.ShutdownOnSuccess<>()) {
