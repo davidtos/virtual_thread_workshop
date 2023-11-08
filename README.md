@@ -128,12 +128,12 @@ The next step is to improve the performance of the scraper. Make it so that the 
 
 ```java
 visited.add(url);
-for (Element link : linksOnPage) {
-    String nextUrl = link.attr("abs:href");
-    if (nextUrl.contains("http")) {
+        for (Element link : linksOnPage) {
+        String nextUrl = link.attr("abs:href");
+        if (nextUrl.contains("http")) {
         pageQueue.add(nextUrl);
-    }
-}
+        }
+        }
 ```
 Run the Scraper a few times with and without the improvement to see the difference in performance it makes.
 
@@ -167,10 +167,10 @@ Now it is up to you to implement the ShutdownOnSuccess scope in a way that a new
 If you are using the HttpClient you can use the following code to do a POST request to an instance:
 ```java
 private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
-    HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-    client.send(request, HttpResponse.BodyHandlers.ofString());
-    return null;
-}
+        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+        return null;
+        }
 ```
 
 ## (Step 10) - Use scoped values
