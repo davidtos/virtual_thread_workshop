@@ -6,7 +6,7 @@ Welcome to the workshop where you are going to build a web scraper that is going
 - Structured task scope
 - Scoped values
 
-The workshop starts with just a simple single-threaded web scraper that only scrapes a single page. You are going to improve this web scraper by first making it multithreaded using platform threads and later by using virtual threads. This new type of thread is a great
+The workshop starts with a simple single-threaded web scraper that only scrapes a single page. You are going to improve this web scraper by first making it multithreaded using platform threads and later by using virtual threads. This new type of thread is a great
 new addition to the Java language but doesn't work the same as platform threads in every situation. During this workshop you are going to experience when virtual threads work best, and when they work just oke-ish.
 
 To follow along with the workshop you need to also check out [this repository](https://github.com/davidtos/workshop_server).
@@ -130,12 +130,12 @@ The next step is to improve the performance of the scraper. Make it so that the 
 
 ```java
 visited.add(url);
-        for (Element link : linksOnPage) {
-        String nextUrl = link.attr("abs:href");
-        if (nextUrl.contains("http")) {
+for (Element link : linksOnPage) {
+    String nextUrl = link.attr("abs:href");
+    if (nextUrl.contains("http")) {
         pageQueue.add(nextUrl);
-        }
-        }
+    }
+}
 ```
 Run the Scraper a few times with and without the improvement to see the difference in performance it makes.
 
@@ -152,37 +152,38 @@ to fork new threads using the StructuredTaskScope.
 
 ## (Step 9) - Implement ShutdownOnSuccess
 `ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step, you are going to implement the
-`ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** states that it will shut down the scope after a threads finishes successfully.
+`ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** policy states that it will shut down the scope after a threads finishes successfully.
 
 For the next step, we are going to let another service know what page we just scraped. To improve the speed of the scraper it doesn't matter
 which instance processes the request first. The fastest instance to process the request is the winner as far as the scraper is concerned.
 
-The URLs of the instances is:
+The URLs of the instances are:
 - http://localhost:8080/v1/VisitedService/1
 - http://localhost:8080/v1/VisitedService/2
 - http://localhost:8080/v1/VisitedService/3
 
-The services expect a POST request with a URL as body.
+The services expect a POST request with a URL as the body.
 
 Now it is up to you to implement the ShutdownOnSuccess scope in a way that a new virtual thread is forked for each one of the service instances.
 
-
-If you are using the HttpClient you can use the following code:
+If you are using the HttpClient you can use the following code to do a POST request to an instance:
 ```java
 private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-        return null;
-        }
+    HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+    client.send(request, HttpResponse.BodyHandlers.ofString());
+    return null;
+}
 ```
 
 ## (Step 10) - Use scoped values
-The name of this step already gave it away, but for the last step you are going to add scoped values to the scraper.
-You need to change the Scraper in such a way that each scraper instance run in a scope where the http client is already known.
+The name of this step already gave it away, but for the last step, you are going to add scoped values to the scraper.
+You need to change the Scraper in such a way that each Scraper instance runs in a scope where the HTTP client is already known.
 
-The goal is to no longer pass the HttpClient as a constructor parameter to the Scraper but that you implement it as a ScopedValue. This way the Client
+The goal is to no longer pass the HttpClient as a constructor parameter to the Scraper but you implement it as a ScopedValue. This way the Client
 is known inside the scraper and all the subsequent calls.
 
 > Note: During the implementation notice that the child virtual threads can use the same client as you passed to the parent thread.
-> When you use the structured task scope all the threads you fork will have the same scoped values as the parent becasue they
+> When you use the structured task scope all the threads you fork will have the same scoped values as the parent because they
 > run in the same scope as the parent.
+
+
