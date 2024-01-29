@@ -1,5 +1,6 @@
 package com.davidvlijmincx;
 
+import com.davidvlijmincx.bonus.features.HighScore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,11 +41,14 @@ public class WebScraper {
             }
         }
 
-        measureTime(startTime, visited);
+        double score = measureTime(startTime, visited);
+
+        HighScore highScore = new HighScore();
+        highScore.submitScore(score);
 
     }
 
-    private static void measureTime(long startTime, Set<String> visited) {
+    private static double measureTime(long startTime, Set<String> visited) {
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 
@@ -55,6 +59,7 @@ public class WebScraper {
 
         double throughput = visited.size() / totalTimeInSeconds;
         System.out.println("Throughput: " + throughput + " pages/sec");
+        return throughput;
     }
 
     private static HttpClient createHttpClient() {

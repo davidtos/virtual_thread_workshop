@@ -183,3 +183,20 @@ is known inside the scraper and all the subsequent calls.
 > Note: During the implementation notice that the child virtual threads can use the same client as you passed to the parent thread.
 > When you use the structured task scope all the threads you fork will have the same scoped values as the parent because they
 > run in the same scope as the parent.
+
+## Bonus feature 1: Scope inheritance
+You may have used scope inheritance in step 10 already, but let's focus on it a bit more with this bonus feature. Scope inheritance
+is the mechanism in which a child thread, inherits the scope from the parent thread. Both threads keep running in the same scope.
+
+To show you how inheritance works you will imple
+
+
+
+
+
+## Bonus feature 2: Rebinding scoped values
+## Bonus feature 3: Creating your own shutdown task scope 
+## Bonus feature 4: custom Struc[tured task scope: moving the business logic 
+## Bonus feature 5: Virtual thread](https://www.seriouseats.com/the-right-way-to-sauce-pasta) with existing executors
+## Bonus feature 6: Configuring the number of carrier threads
+## Bonus feature 7: Deadlines with structured concurrency
