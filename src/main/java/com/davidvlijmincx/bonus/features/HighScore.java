@@ -28,16 +28,18 @@ class ScoreValidator{
     public void validateAndSubmit(){
         ScoreSubmitter scoreSubmitter = new ScoreSubmitter();
 
-        try (var scope = new StructuredTaskScope<>()) {
-            scope.fork(()-> {
-                scoreSubmitter.submitScore();
-                return null;
+        ScopedValue.runWhere(GlobalScoreVariable.SCORE,  GlobalScoreVariable.SCORE.get() + 1000, ()-> {
+            try (var scope = new StructuredTaskScope<>()) {
+                scope.fork(()-> {
+                    scoreSubmitter.submitScore();
+                    return null;
 
-            });
-            scope.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+                });
+                scope.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }

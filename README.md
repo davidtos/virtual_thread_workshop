@@ -188,15 +188,16 @@ is known inside the scraper and all the subsequent calls.
 You may have used scope inheritance in step 10 already, but let's focus on it a bit more with this bonus feature. Scope inheritance
 is the mechanism in which a child thread, inherits the scope from the parent thread. Both threads keep running in the same scope.
 
-To show you how inheritance works you will imple
-
-
-
-
+To show you how inheritance of scoped values works you will implement the HighScore class from the `bonus.feature` package.
+The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values. 
 
 ## Bonus feature 2: Rebinding scoped values
+Since we have access to the code, lets cheat a little with our scores. for this bonus feature you are going to increase the score with 1000 during the validation step.
+To do this you will need to rebind the Score scoped value. 
+
+
 ## Bonus feature 3: Creating your own shutdown task scope 
-## Bonus feature 4: custom Struc[tured task scope: moving the business logic 
-## Bonus feature 5: Virtual thread](https://www.seriouseats.com/the-right-way-to-sauce-pasta) with existing executors
-## Bonus feature 6: Configuring the number of carrier threads
+## Bonus feature 4: custom Structured task scope: moving the business logic 
 ## Bonus feature 7: Deadlines with structured concurrency
+## Bonus feature 5: Virtual thread with existing executors
+## Bonus feature 6: Configuring the number of carrier threads
