@@ -1,5 +1,6 @@
 package com.davidvlijmincx;
 
+import com.davidvlijmincx.bonus.features.FindBestStartingSource;
 import com.davidvlijmincx.bonus.features.HighScore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +26,11 @@ public class WebScraper {
     public static void main(String[] args) {
         final var queue = new LinkedBlockingQueue<String>(2000);
         Set<String> visited = ConcurrentHashMap.newKeySet(3000);
+
+
+        FindBestStartingSource findBestStartingSource = new FindBestStartingSource();
+        String bestStart = findBestStartingSource.FindTheBestStart();
+
 
         queue.add("http://localhost:8080/v1/crawl/330/57");
 
