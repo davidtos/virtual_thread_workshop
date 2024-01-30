@@ -205,4 +205,6 @@ To do this you will need to rebind the Score scoped value.
 
 
 ## Bonus feature 6: Virtual thread with existing executors
+
+
 ## Bonus feature 7: Configuring the number of carrier threads

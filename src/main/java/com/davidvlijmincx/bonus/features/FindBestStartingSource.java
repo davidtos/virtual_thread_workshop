@@ -3,7 +3,9 @@ package com.davidvlijmincx.bonus.features;
 import com.davidvlijmincx.bonus.features.setup.StartingPoint;
 import com.davidvlijmincx.bonus.features.setup.StartingPointFinder;
 
+import java.time.Instant;
 import java.util.concurrent.StructuredTaskScope;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 public class FindBestStartingSource {
@@ -22,7 +24,7 @@ public class FindBestStartingSource {
             StructuredTaskScope.Subtask<StartingPoint> fork1 = scope.fork(StartingPointFinder::source2);
             StructuredTaskScope.Subtask<StartingPoint> fork2 = scope.fork(StartingPointFinder::source3);
 
-            scope.join();
+            scope.joinUntil(Instant.now().plusSeconds(5));
 
             System.out.println("fork.state() = " + fork.state());
             System.out.println("fork.state() = " + fork1.state());
@@ -31,7 +33,7 @@ public class FindBestStartingSource {
             StartingPoint result = scope.getResult();
             System.out.println("result: " + result.getUrlsOnPage() + " with URL: " + result.getUrl() );
             return result.getUrl();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | TimeoutException e) {
             throw new RuntimeException(e);
         }
 
