@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d8c0eda-abd8-41e0-ae74-bf7eb2be634a" name="Changes" comment="end result of the workshop">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/bonus/features/FindBestStartingSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/bonus/features/FindBestStartingSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/bonus/features/VirtualThreadsWithExecutors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/davidvlijmincx/bonus/features/VirtualThreadsWithExecutors.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +41,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.VirtualThreadsWithExecutors.executor": "Run",
     "Application.WebScraper.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "bonus-feature-4-moving-the-business-logic",
+    "git-widget-placeholder": "bonus-feature-6-Virtual-thread-with-existing-executors",
     "last_opened_file_path": "/home/david/IdeaProjects/virtual_thread_workshop/src/main/java/com/davidvlijmincx",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -67,7 +66,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/com/davidvlijmincx" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.WebScraper">
+  <component name="RunManager" selected="Application.VirtualThreadsWithExecutors">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.davidvlijmincx.Main" />
       <module name="workshop" />
@@ -87,6 +86,19 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.davidvlijmincx.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VirtualThreadsWithExecutors" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.davidvlijmincx.bonus.features.VirtualThreadsWithExecutors" />
+      <module name="workshop" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.davidvlijmincx.bonus.features.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -121,6 +133,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.VirtualThreadsWithExecutors" />
       <item itemvalue="Application.Main" />
       <item itemvalue="Application.ScopedWebCrawler" />
       <item itemvalue="Application.WebCrawler" />
@@ -128,11 +141,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.VirtualThreadsWithExecutors" />
         <item itemvalue="Application.WebScraper" />
         <item itemvalue="Application.WebCrawler" />
         <item itemvalue="Application.ScopedWebCrawler" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.WebScraper" />
       </list>
     </recent_temporary>
   </component>
@@ -205,13 +218,36 @@
       <option name="project" value="LOCAL" />
       <updated>1706526843991</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="end result of the workshop">
+      <option name="closed" value="true" />
+      <created>1706612313249</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1706612313249</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="bonus-feature-7-Configuring-the-number-of-carrier-threads" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -222,7 +258,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="use-scoped-values" />
+                        <option value="bonus-feature-7-Configuring-the-number-of-carrier-threads" />
                       </list>
                     </value>
                   </entry>

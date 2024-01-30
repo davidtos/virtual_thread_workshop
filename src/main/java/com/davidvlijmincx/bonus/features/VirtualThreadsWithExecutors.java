@@ -9,15 +9,14 @@ public class VirtualThreadsWithExecutors {
     public static void main(String[] args) {
 
 
-        try(var executor = Executors.newScheduledThreadPool(1)){
-            executor.schedule(()-> System.out.println("Hello, World!"), 1, TimeUnit.SECONDS);
-        }
+        var executor = Executors.newScheduledThreadPool(1);
+        executor.schedule(() -> System.out.println("Hello, World!"), 1, TimeUnit.SECONDS);
+        executor.shutdown();
 
 
-        try(var executor = Executors.newSingleThreadExecutor()){
-            executor.submit(()-> System.out.println("Hello, World!"));
-        }
-
+        var executor1 = Executors.newSingleThreadExecutor();
+        executor1.submit(() -> System.out.println("Hello, World!"));
+        executor1.shutdown();
 
     }
 
