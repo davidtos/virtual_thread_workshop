@@ -197,7 +197,12 @@ To do this you will need to rebind the Score scoped value.
 
 
 ## Bonus feature 3: Creating your own shutdown task scope 
-## Bonus feature 4: custom Structured task scope: moving the business logic 
-## Bonus feature 7: Deadlines with structured concurrency
-## Bonus feature 5: Virtual thread with existing executors
-## Bonus feature 6: Configuring the number of carrier threads
+
+## Bonus feature 4: custom Structured task scope: moving the business logic
+
+
+## Bonus feature 5: Deadlines with structured concurrency
+
+
+## Bonus feature 6: Virtual thread with existing executors
+## Bonus feature 7: Configuring the number of carrier threads
