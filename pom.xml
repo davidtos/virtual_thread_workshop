@@ -32,7 +32,9 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>21</release>
-                    <compilerArgs>--enable-preview</compilerArgs>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
