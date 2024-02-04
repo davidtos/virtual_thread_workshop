@@ -1,55 +1,35 @@
 package com.davidvlijmincx.bonus.features;
 
-import java.util.concurrent.StructuredTaskScope;
-
 public class HighScore {
 
-    public void submitScore(Double score){
+    public void submitScore(Double score) {
         ScoreValidator scoreValidator = new ScoreValidator();
-
-        ScopedValue.runWhere(GlobalScoreVariable.SCORE, score, ()-> {
-            try (var scope = new StructuredTaskScope<>()) {
-                scope.fork(()-> {
-                    scoreValidator.validateAndSubmit();
-                    return null;
-                });
-                scope.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        scoreValidator.validateAndSubmit();
     }
 
 }
 
-class ScoreValidator{
+class ScoreValidator {
 
-    public void validateAndSubmit(){
+    public void validateAndSubmit() {
         ScoreSubmitter scoreSubmitter = new ScoreSubmitter();
-
-        try (var scope = new StructuredTaskScope<>()) {
-            scope.fork(()-> {
-                scoreSubmitter.submitScore();
-                return null;
-
-            });
-            scope.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        scoreSubmitter.submitScore();
     }
 
 }
 
-class ScoreSubmitter{
+class ScoreSubmitter {
 
-    public void submitScore(){
-        System.out.println("The score is: " + GlobalScoreVariable.SCORE.get());
+    public void submitScore() {
+        System.out.println("The score is: " + GlobalScoreVariable.SCORE);
     }
 }
 
-class GlobalScoreVariable{
-    final static ScopedValue<Double> SCORE = ScopedValue.newInstance();
+
+
+
+class GlobalScoreVariable {
+    final static Double SCORE = 0.0;
 }
 
 
