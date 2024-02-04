@@ -1,6 +1,5 @@
 package com.davidvlijmincx.bonus.features;
 
-import java.net.http.HttpClient;
 import java.util.concurrent.StructuredTaskScope;
 
 public class HighScore {
