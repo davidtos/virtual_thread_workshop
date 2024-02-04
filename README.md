@@ -86,6 +86,8 @@ Some of the results will surprise you :-)
 
 > Note: To get a good idea of the impact. I recommend trying out lots of tasks with the delay endpoint on both virtual and platform threads. And the same thing but without the endpoint with the delay.
 
+> **_!!Bonus!!_** Let's enable virtual thread on the (Spring) back-end, Spring now support virtual threads. Let's enable them
+> to see how the scraper is impacted and what it does with the back-end application.
 
 ## (Step 5) - Find the pinned virtual thread
 Virtual threads are unmounted when they are blocked for example, when they are waiting on the response of a web server. Unmounting is a powerful feature but doesn't always work (yet)...
@@ -114,9 +116,9 @@ number of carrier threads that get created.
 
 Use the following options and see what impact it has on your scraper.
 ```text
-jdk.virtualThreadScheduler.parallelism=5
+-Djdk.virtualThreadScheduler.parallelism=1 
 
-jdk.virtualThreadScheduler.maxPoolSize=10
+-Djdk.virtualThreadScheduler.maxPoolSize=1
 ```
 
 Try out some different numbers and see if it increases or lowers the amount of pages per second you can scrape.
@@ -189,15 +191,33 @@ You may have used scope inheritance in step 10 already, but let's focus on it a 
 is the mechanism in which a child thread, inherits the scope from the parent thread. Both threads keep running in the same scope.
 
 To show you how inheritance of scoped values works you will implement the HighScore class from the `bonus.feature` package.
-The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values. 
+The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values.
 
 ## Bonus feature 2: Rebinding scoped values
 Since we have access to the code, lets cheat a little with our scores. for this bonus feature you are going to increase the score with 1000 during the validation step.
-To do this you will need to rebind the Score scoped value. 
+To do this you will need to rebind the Score scoped value.
 
+## Bonus feature 3: Creating your own shutdown task scope
+For this feature, we are going to implement our own task scope. Till now, we have only used the built-in task scopes/ shutdown policies. Let's try something else
+and implement our own task scope. on the `bonus.features` package you can find the FindBestStartingSource class file. Inside this class you can find the starting point.
 
-## Bonus feature 3: Creating your own shutdown task scope 
-## Bonus feature 4: custom Structured task scope: moving the business logic 
-## Bonus feature 7: Deadlines with structured concurrency
-## Bonus feature 5: Virtual thread with existing executors
-## Bonus feature 6: Configuring the number of carrier threads
+To implement you own scope you need to override the `handleComplete()` method and call the `shutdown()` when you want to stop the remaining threads.k
+
+## Bonus feature 4: custom Structured task scope: moving the business logic
+Having all the domain logic inside the scope class is the king of ugly. It's not a nice place to have business logic.
+You can improve this in any way you want, you can be creative :). The only hint I will give is to use a `Predicate`.
+
+## Bonus feature 5: Deadlines with structured concurrency
+No one likes to wait forever. So let us add some deadlines to the scope we were working with. Create a deadline for any number
+of milliseconds, and look at what it does with your code, and virtual threads.
+
+## Bonus feature 6: Virtual thread with existing executors
+Virtual threads are great, but how can we use it with existing code? During this assingment you will implement virtual threads with existing executors. In the bonus feature
+package you can find the  `VirtualThreadsWithExecutors` class. Currently, it uses platform threads, but it is up to you now to implement it with virtual threads.
+
+You can try them out on the web scraper or the Spring/back-end application and see how it affects your application.
+
+## bonus feature 7: Limit the number of requests without limiting the virtual thread creation
+The importance of virtual threads is that you should use them as threads, but more like task you want to run concurrently.
+For the last bonus feature, you are tasked with limiting the number of requests going out the back-end server, without limiting the number
+of virtual threads that get created. You can use anything you want, but I would recommend to use a kind of lock :)
