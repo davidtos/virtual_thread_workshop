@@ -131,11 +131,11 @@ The next step is to improve the performance of the scraper. Make it so that the 
 ```java
 visited.add(url);
 for (Element link : linksOnPage) {
-    String nextUrl = link.attr("abs:href");
+String nextUrl = link.attr("abs:href");
     if (nextUrl.contains("http")) {
         pageQueue.add(nextUrl);
     }
-}
+            }
 ```
 Run the Scraper a few times with and without the improvement to see the difference in performance it makes.
 
@@ -203,7 +203,7 @@ and implement your own task scope. on the `bonus.features` package you can find 
 
 The class file has two classes `FindBestStartingSource` and `CriteriaScope` it is up to you to implement your own structured task scope wit the CriteriaScope class and use it instead of the ShutdownOnFailure scope.
 
-The goal is to implement a custom scope that stops when it has found a starting point with more than 150 urls. 
+The goal is to implement a custom scope that stops when it has found a starting point with more than 150 urls.
 
 > Note: To implement your own scope you need to extend the `StructuredTaskscope` class and  override the `handleComplete()` method and call the `shutdown()` when you found a good staring point for the scraper.
 
@@ -212,14 +212,14 @@ Having all the domain logic inside the scope class is the king of ugly. It's jus
 You can improve this in any way you want, you can be creative :). The only suggestion I will give is to use a `Predicate`.
 
 > Note: While this doesn't hurt or improve performance it is good to think critical about the code you write. Even if the API somewhat forces  you into a solution, it doesn't mean
-> you can't create something that is a bit more maintainable and readable. :) 
+> you can't create something that is a bit more maintainable and readable. :)
 
 ## Bonus feature 5: Deadlines with structured concurrency
 No one likes to wait forever. So let us add some deadlines to the scope from the previous assignment. Create a deadline for any number
 of milliseconds, and look at what it does with your code, and status of the virtual threads.
 
-> Note: The methods inside the `StartingPointFinder` all do a thread.sleep() call. 
-> `source1` waits 100 
+> Note: The methods inside the `StartingPointFinder` all do a thread.sleep() call.
+> `source1` waits 100
 > `source2` waits 200
 > `source3` waits 50
 
