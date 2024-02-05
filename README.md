@@ -20,7 +20,7 @@ Below you will find the steps of the workshop. The best way to follow along is t
 - Run the Spring project inside [this repository](https://github.com/davidtos/workshop_server), it has the web server we scrape inside it
 - Follow along with the steps below (Ron and David give some theory, hints, and background info between steps)
 - Are you already done and want to start with the next step? go head! :-)
-- Any questions? Feel free to ask! We are happy to answer them
+- Any questions? Feel free to ask! I more than happy to answer them
 
 # Requirements
 To follow along with this workshop you need the following things:
@@ -154,7 +154,7 @@ to fork new threads using the StructuredTaskScope.
 `ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step, you are going to implement the
 `ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** policy states that it will shut down the scope after a threads finishes successfully.
 
-For the next step, we are going to let another service know what page we just scraped. To improve the speed of the scraper it doesn't matter
+For the next step, you are going to let another service know what page you just scraped. To improve the speed of the scraper it doesn't matter
 which instance processes the request first. The fastest instance to process the request is the winner as far as the scraper is concerned.
 
 The URLs of the instances are:
@@ -188,44 +188,48 @@ is known inside the scraper and all the subsequent calls.
 
 ## Bonus feature 1: Scope inheritance
 You may have used scope inheritance in step 10 already, but let's focus on it a bit more with this bonus feature. Scope inheritance
-is the mechanism in which a child thread, inherits the scope from the parent thread. Both threads keep running in the same scope.
+is the mechanism in which a child thread, inherits the scoped values from the parent thread. Essentially both threads keep running in the same scope.
 
-To show you how inheritance of scoped values works you will implement the HighScore class from the `bonus.feature` package.
-The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values. 
+To show you how inheritance of scoped values works you will implement the `HighScore` class from the `bonus.feature` package.
+The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values and structured task scopes.
 
 ## Bonus feature 2: Rebinding scoped values
-Since we have access to the code, lets cheat a little with our scores. for this bonus feature you are going to increase the score with 1000 during the validation step.
-To do this you will need to rebind the Score scoped value. 
+Since we have access to the code, lets cheat a little with the high score. for this bonus feature you are going to increase the score with 1000 during the validation step.
+To do this you will need to rebind the Score scoped value.
 
 ## Bonus feature 3: Creating your own shutdown task scope
-For this feature, we are going to implement our own task scope. Till now, we have only used the built-in task scopes/ shutdown policies. Let's try something else
-and implement our own task scope. on the `bonus.features` package you can find the FindBestStartingSource class file. Inside this class you can find the starting point.
+For this feature, you are going to implement our own task scope. Till now, you have only used the built-in task scopes/ shutdown policies. Let's try something else
+and implement your own task scope. on the `bonus.features` package you can find the `FindBestStartingSource` class file. The function of this class is to find the best staring point url for the scraper.
 
-To implement you own scope you need to override the `handleComplete()` method and call the `shutdown()` when you want to stop the remaining threads.k 
+The class file has two classes `FindBestStartingSource` and `CriteriaScope` it is up to you to implement your own structured task scope wit the CriteriaScope class and use it instead of the ShutdownOnFailure scope.
+
+The goal is to implement a custom scope that stops when it has found a starting point with more than 150 urls.
+
+> Note: To implement your own scope you need to extend the `StructuredTaskscope` class and  override the `handleComplete()` method and call the `shutdown()` when you found a good staring point for the scraper.
 
 ## Bonus feature 4: custom Structured task scope: moving the business logic
-Having all the domain logic inside the scope class is the king of ugly. It's not a nice place to have business logic. 
-You can improve this in any way you want, you can be creative :). The only hint I will give is to use a `Predicate`. 
+Having all the domain logic inside the scope class is the king of ugly. It's just not a nice place to have business logic.
+You can improve this in any way you want, you can be creative :). The only suggestion I will give is to use a `Predicate`.
+
+> Note: While this doesn't hurt or improve performance it is good to think critical about the code you write. Even if the API somewhat forces  you into a solution, it doesn't mean
+> you can't create something that is a bit more maintainable and readable. :)
 
 ## Bonus feature 5: Deadlines with structured concurrency
-No one likes to wait forever. So let us add some deadlines to the scope we were working with. Create a deadline for any number
-of milliseconds, and look at what it does with your code, and virtual threads.
+No one likes to wait forever. So let us add some deadlines to the scope from the previous assignment. Create a deadline for any number
+of milliseconds, and look at what it does with your code, and status of the virtual threads.
+
+> Note: The methods inside the `StartingPointFinder` all do a thread.sleep() call.
+> `source1` waits 100
+> `source2` waits 200
+> `source3` waits 50
 
 ## Bonus feature 6: Virtual thread with existing executors
-Virtual threads are great, but how can we use it with existing code? During this assingment you will implement virtual threads with existing executors. In the bonus feature
-package you can find the  `VirtualThreadsWithExecutors` class. Currently, it uses platform threads, but it is up to you now to implement it with virtual threads.  
-
-You can try them out on the web scraper or the Spring/back-end application and see how it affects your application.
+Virtual threads are great, but how can you use it with existing code? During this assignment you will implement virtual threads with existing executors. In the bonus feature
+package you can find the  `VirtualThreadsWithExecutors` class. Currently, it uses platform threads, but it is up to you now to implement it with virtual threads.
 
 ## bonus feature 7: Limit the number of requests without limiting the virtual thread creation
 The importance of virtual threads is that you should use them as threads, but more like task you want to run concurrently.
-For the last bonus feature, you are tasked with limiting the number of requests going out the back-end server, without limiting the number 
-of virtual threads that get created. You can use anything you want, but I would recommend to use a kind of lock :) 
+For the last bonus feature, you are tasked with limiting the number of requests going out the back-end server, without limiting the number
+of virtual threads that get created. You can use anything you want, but I would recommend to use a kind of lock :)
 
-
-
-
-
-
-
-
+Pooling virtual threads and pinning them in any way does not count.
