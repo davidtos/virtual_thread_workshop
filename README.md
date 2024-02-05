@@ -20,7 +20,7 @@ Below you will find the steps of the workshop. The best way to follow along is t
 - Run the Spring project inside [this repository](https://github.com/davidtos/workshop_server), it has the web server we scrape inside it
 - Follow along with the steps below (Ron and David give some theory, hints, and background info between steps)
 - Are you already done and want to start with the next step? go head! :-)
-- Any questions? Feel free to ask! We are happy to answer them
+- Any questions? Feel free to ask! I more than happy to answer them
 
 # Requirements
 To follow along with this workshop you need the following things:
@@ -86,6 +86,8 @@ Some of the results will surprise you :-)
 
 > Note: To get a good idea of the impact. I recommend trying out lots of tasks with the delay endpoint on both virtual and platform threads. And the same thing but without the endpoint with the delay.
 
+> **_!!Bonus!!_** Let's enable virtual thread on the (Spring) back-end, Spring now support virtual threads. Let's enable them
+> to see how the scraper is impacted and what it does with the back-end application.
 
 ## (Step 5) - Find the pinned virtual thread
 Virtual threads are unmounted when they are blocked for example, when they are waiting on the response of a web server. Unmounting is a powerful feature but doesn't always work (yet)...
@@ -114,9 +116,9 @@ number of carrier threads that get created.
 
 Use the following options and see what impact it has on your scraper.
 ```text
-jdk.virtualThreadScheduler.parallelism=5
+-Djdk.virtualThreadScheduler.parallelism=1 
 
-jdk.virtualThreadScheduler.maxPoolSize=10
+-Djdk.virtualThreadScheduler.maxPoolSize=1
 ```
 
 Try out some different numbers and see if it increases or lowers the amount of pages per second you can scrape.
@@ -128,12 +130,12 @@ The next step is to improve the performance of the scraper. Make it so that the 
 
 ```java
 visited.add(url);
-        for (Element link : linksOnPage) {
-        String nextUrl = link.attr("abs:href");
-        if (nextUrl.contains("http")) {
+for (Element link : linksOnPage) {
+    String nextUrl = link.attr("abs:href");
+    if (nextUrl.contains("http")) {
         pageQueue.add(nextUrl);
-        }
-        }
+    }
+}
 ```
 Run the Scraper a few times with and without the improvement to see the difference in performance it makes.
 
@@ -152,7 +154,7 @@ to fork new threads using the StructuredTaskScope.
 `ShutdownOnFailure` is not the only shutdown policy that you get with Java 21. During this step, you are going to implement the
 `ShutdownOnSuccess` shutdown policy. The **ShutdownOnSuccess** policy states that it will shut down the scope after a threads finishes successfully.
 
-For the next step, we are going to let another service know what page we just scraped. To improve the speed of the scraper it doesn't matter
+For the next step, you are going to let another service know what page you just scraped. To improve the speed of the scraper it doesn't matter
 which instance processes the request first. The fastest instance to process the request is the winner as far as the scraper is concerned.
 
 The URLs of the instances are:
@@ -167,10 +169,10 @@ Now it is up to you to implement the ShutdownOnSuccess scope in a way that a new
 If you are using the HttpClient you can use the following code to do a POST request to an instance:
 ```java
 private Object post(String serviceUrl, String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-        return null;
-        }
+    HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(url)).uri(URI.create(serviceUrl)).build();
+    client.send(request, HttpResponse.BodyHandlers.ofString());
+    return null;
+}
 ```
 
 ## (Step 10) - Use scoped values
@@ -183,3 +185,51 @@ is known inside the scraper and all the subsequent calls.
 > Note: During the implementation notice that the child virtual threads can use the same client as you passed to the parent thread.
 > When you use the structured task scope all the threads you fork will have the same scoped values as the parent because they
 > run in the same scope as the parent.
+
+## Bonus feature 1: Scope inheritance
+You may have used scope inheritance in step 10 already, but let's focus on it a bit more with this bonus feature. Scope inheritance
+is the mechanism in which a child thread, inherits the scoped values from the parent thread. Essentially both threads keep running in the same scope.
+
+To show you how inheritance of scoped values works you will implement the `HighScore` class from the `bonus.feature` package.
+The challenge is to pass the score to the submitScore method without using it as a method parameter. You will have to use scope values and structured task scopes.
+
+## Bonus feature 2: Rebinding scoped values
+Since we have access to the code, lets cheat a little with the high score. for this bonus feature you are going to increase the score with 1000 during the validation step.
+To do this you will need to rebind the Score scoped value.
+
+## Bonus feature 3: Creating your own shutdown task scope
+For this feature, you are going to implement our own task scope. Till now, you have only used the built-in task scopes/ shutdown policies. Let's try something else
+and implement your own task scope. on the `bonus.features` package you can find the `FindBestStartingSource` class file. The function of this class is to find the best staring point url for the scraper.
+
+The class file has two classes `FindBestStartingSource` and `CriteriaScope` it is up to you to implement your own structured task scope wit the CriteriaScope class and use it instead of the ShutdownOnFailure scope.
+
+The goal is to implement a custom scope that stops when it has found a starting point with more than 150 urls.
+
+> Note: To implement your own scope you need to extend the `StructuredTaskscope` class and  override the `handleComplete()` method and call the `shutdown()` when you found a good staring point for the scraper.
+
+## Bonus feature 4: custom Structured task scope: moving the business logic
+Having all the domain logic inside the scope class is the king of ugly. It's just not a nice place to have business logic.
+You can improve this in any way you want, you can be creative :). The only suggestion I will give is to use a `Predicate`.
+
+> Note: While this doesn't hurt or improve performance it is good to think critical about the code you write. Even if the API somewhat forces  you into a solution, it doesn't mean
+> you can't create something that is a bit more maintainable and readable. :)
+
+## Bonus feature 5: Deadlines with structured concurrency
+No one likes to wait forever. So let us add some deadlines to the scope from the previous assignment. Create a deadline for any number
+of milliseconds, and look at what it does with your code, and status of the virtual threads.
+
+> Note: The methods inside the `StartingPointFinder` all do a thread.sleep() call.
+> `source1` waits 100
+> `source2` waits 200
+> `source3` waits 50
+
+## Bonus feature 6: Virtual thread with existing executors
+Virtual threads are great, but how can you use it with existing code? During this assignment you will implement virtual threads with existing executors. In the bonus feature
+package you can find the  `VirtualThreadsWithExecutors` class. Currently, it uses platform threads, but it is up to you now to implement it with virtual threads.
+
+## bonus feature 7: Limit the number of requests without limiting the virtual thread creation
+The importance of virtual threads is that you should use them as threads, but more like task you want to run concurrently.
+For the last bonus feature, you are tasked with limiting the number of requests going out the back-end server, without limiting the number
+of virtual threads that get created. You can use anything you want, but I would recommend to use a kind of lock :)
+
+Pooling virtual threads and pinning them in any way does not count.
